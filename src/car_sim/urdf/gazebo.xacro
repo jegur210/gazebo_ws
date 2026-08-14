@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <gazebo>
+        <plugin
+            filename="gz-sim-ackermann-steering-system"
+            name="gz::sim::systems::AckermannSteering">
+            
+            <left_steering_joint>left_wheel_steering_joint</left_steering_joint>
+            <right_steering_joint>right_wheel_steering_joint</right_steering_joint>
+            
+            <!-- [핵심 수정] spin_joint가 아니라 left_joint, right_joint를 사용해야 동력이 전달됩니다! -->
+            <left_joint>back_left_wheel_joint</left_joint>
+            <right_joint>back_right_wheel_joint</right_joint>
+            
+            <!-- 차량 제원 -->
+            <wheel_separation>1.2</wheel_separation>
+            <wheel_base>2.0</wheel_base>
+            <wheel_radius>0.3</wheel_radius>
+            
+            <!-- 조향각 및 구동 파라미터 -->
+            <steering_limit>0.6108</steering_limit>
+            <min_velocity>-10.0</min_velocity>
+            <max_velocity>10.0</max_velocity>
+            
+            <topic>/cmd_vel</topic>
+            <odom_topic>/odom</odom_topic>
+            <tf_topic>/tf</tf_topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_link</child_frame_id>
+        </plugin>
+
+        <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher"/>
+    </gazebo>
+
+    <!-- 바퀴 링크의 물리 속성 강제 설정 -->
+    <xacro:macro name="wheel_physics" params="name">
+        <gazebo reference="${name}">
+            <mu1>1.0</mu1>              <!-- 직진(굴러가는) 방향 마찰 계수 -->
+            <mu2>2.0</mu2>              <!-- 횡방향 마찰 계수 (옆으로 미끄러짐 방지) -->
+            <fdir1>1 0 0</fdir1>        <!-- 바퀴가 굴러가는 기준 방향을 X축(전진 방향)으로 명시 -->
+            <kp>1000000.0</kp>
+            <kd>100.0</kd>              <!-- 진동을 잡아주기 위해 kd(댐핑) 값을 100.0으로 상향 -->
+            <minDepth>0.001</minDepth>
+            <maxVel>0.1</maxVel>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- [핵심 수정] 뒷바퀴뿐만 아니라 앞바퀴도 물리 속성을 지정해 주어야 끌리지 않습니다. -->
+    <xacro:wheel_physics name="back_left_wheel_link"/>
+    <xacro:wheel_physics name="back_right_wheel_link"/>
+    <xacro:wheel_physics name="front_left_wheel_link"/>
+    <xacro:wheel_physics name="front_right_wheel_link"/>
+
+    <gazebo reference="camera_link">
+        <!-- sensor type="camera"를 통해 이 링크가 카메라임을 명시합니다. -->
+        <sensor name="front_camera" type="camera">
+            <always_on>true</always_on>
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize> <!-- 시뮬레이터 상에서 카메라 시야각을 반투명하게 보여줍니다. -->
+            <update_rate>30.0</update_rate> <!-- 초당 30프레임 -->
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov> <!-- 시야각 (약 62도) -->
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format> <!-- 컬러 이미지 포맷 -->
+                </image>
+                <clip>
+                    <near>0.05</near> <!-- 이 거리보다 가까운 것은 안 보임 -->
+                    <far>100.0</far>  <!-- 이 거리보다 먼 것은 안 보임 -->
+                </clip>
+            </camera>
+            <topic>/camera/image_raw</topic> <!-- 영상을 출력할 토픽 이름 -->
+            <gz_frame_id>camera_link</gz_frame_id>
+        </sensor>
+    </gazebo>
+
+</robot>

@@ -1,0 +1,15 @@
+[0.695s] Invoking command in '/home/jegur/gazebo_ws/build/car_sim': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/jegur/gazebo_ws/build/car_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jegur/gazebo_ws/build/car_sim/build --no-deps symlink_data
+[0.898s] running develop
+[1.010s] running egg_info
+[1.020s] writing car_sim.egg-info/PKG-INFO
+[1.020s] writing dependency_links to car_sim.egg-info/dependency_links.txt
+[1.020s] writing requirements to car_sim.egg-info/requires.txt
+[1.020s] writing top-level names to car_sim.egg-info/top_level.txt
+[1.043s] reading manifest file 'car_sim.egg-info/SOURCES.txt'
+[1.043s] writing manifest file 'car_sim.egg-info/SOURCES.txt'
+[1.055s] running build_ext
+[1.055s] Creating /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car-sim.egg-link (link to .)
+[1.055s] 
+[1.055s] Installed /home/jegur/gazebo_ws/build/car_sim
+[1.055s] running symlink_data
+[1.073s] Invoked command in '/home/jegur/gazebo_ws/build/car_sim' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/jegur/gazebo_ws/build/car_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jegur/gazebo_ws/build/car_sim/build --no-deps symlink_data

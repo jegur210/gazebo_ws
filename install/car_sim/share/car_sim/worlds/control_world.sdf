@@ -1,0 +1,1553 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="control_world">
+    <!-- Modern Gazebo 필수 플러그인 -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"></plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"></plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"></plugin>
+
+    <!-- [핵심 추가] 카메라 센서 렌더링 및 데이터 출력을 위한 필수 플러그인 -->
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    
+    <!-- 태양광 조명 -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- 바닥 (잔디밭) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.3 0.5 0.3 1</ambient>
+            <diffuse>0.3 0.5 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 왕복 4차선 둥근 트랙 -->
+    <model name="rounded_track">
+      <static>true</static>
+      <link name="track_link">
+
+        <visual name="asphalt_0">
+          <pose>0.0000 10.0000 0.0100 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_1">
+          <pose>0.0000 -10.0000 0.0100 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_2">
+          <pose>0.0000 10.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_3">
+          <pose>0.0000 -10.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_4">
+          <pose>0.0000 12.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_5">
+          <pose>0.0000 -12.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_6">
+          <pose>0.0000 8.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_7">
+          <pose>0.0000 -8.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_8">
+          <pose>0.0000 14.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_9">
+          <pose>0.0000 -14.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_10">
+          <pose>0.0000 6.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_11">
+          <pose>0.0000 -6.0000 0.0200 0 0 0.0000</pose>
+          <geometry><box><size>20.0000 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_12">
+          <pose>10.6540 -9.9786 0.0100 0 0 0.0654</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_13">
+          <pose>-10.6540 -9.9786 0.0100 0 0 3.0761</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_14">
+          <pose>10.6540 -9.9786 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_15">
+          <pose>-10.6540 -9.9786 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_16">
+          <pose>10.7848 -11.9743 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_17">
+          <pose>-10.7848 -11.9743 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_18">
+          <pose>10.5232 -7.9829 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_19">
+          <pose>-10.5232 -7.9829 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_20">
+          <pose>10.9156 -13.9700 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_21">
+          <pose>-10.9156 -13.9700 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_22">
+          <pose>10.3924 -5.9872 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_23">
+          <pose>-10.3924 -5.9872 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_24">
+          <pose>11.9509 -9.8079 0.0100 0 0 0.1963</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_25">
+          <pose>-11.9509 -9.8079 0.0100 0 0 2.9452</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_26">
+          <pose>11.9509 -9.8079 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_27">
+          <pose>-11.9509 -9.8079 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_28">
+          <pose>12.3411 -11.7694 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_29">
+          <pose>-12.3411 -11.7694 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_30">
+          <pose>11.5607 -7.8463 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_31">
+          <pose>-11.5607 -7.8463 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_32">
+          <pose>12.7313 -13.7310 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_33">
+          <pose>-12.7313 -13.7310 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_34">
+          <pose>11.1705 -5.8847 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_35">
+          <pose>-11.1705 -5.8847 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_36">
+          <pose>13.2144 -9.4693 0.0100 0 0 0.3272</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_37">
+          <pose>-13.2144 -9.4693 0.0100 0 0 2.8143</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_38">
+          <pose>13.2144 -9.4693 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_39">
+          <pose>-13.2144 -9.4693 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_40">
+          <pose>13.8573 -11.3632 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_41">
+          <pose>-13.8573 -11.3632 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_42">
+          <pose>12.5715 -7.5754 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_43">
+          <pose>-12.5715 -7.5754 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_44">
+          <pose>14.5002 -13.2570 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_45">
+          <pose>-14.5002 -13.2570 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_46">
+          <pose>11.9286 -5.6816 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_47">
+          <pose>-11.9286 -5.6816 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_48">
+          <pose>14.4229 -8.9687 0.0100 0 0 0.4581</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_49">
+          <pose>-14.4229 -8.9687 0.0100 0 0 2.6834</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_50">
+          <pose>14.4229 -8.9687 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_51">
+          <pose>-14.4229 -8.9687 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_52">
+          <pose>15.3075 -10.7625 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_53">
+          <pose>-15.3075 -10.7625 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_54">
+          <pose>13.5383 -7.1750 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_55">
+          <pose>-13.5383 -7.1750 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_56">
+          <pose>16.1920 -12.5562 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_57">
+          <pose>-16.1920 -12.5562 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_58">
+          <pose>12.6537 -5.3812 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_59">
+          <pose>-12.6537 -5.3812 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_60">
+          <pose>15.5557 -8.3147 0.0100 0 0 0.5890</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_61">
+          <pose>-15.5557 -8.3147 0.0100 0 0 2.5525</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_62">
+          <pose>15.5557 -8.3147 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_63">
+          <pose>-15.5557 -8.3147 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_64">
+          <pose>16.6668 -9.9776 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_65">
+          <pose>-16.6668 -9.9776 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_66">
+          <pose>14.4446 -6.6518 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_67">
+          <pose>-14.4446 -6.6518 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_68">
+          <pose>17.7780 -11.6406 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_69">
+          <pose>-17.7780 -11.6406 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_70">
+          <pose>13.3334 -4.9888 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_71">
+          <pose>-13.3334 -4.9888 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_72">
+          <pose>16.5935 -7.5184 0.0100 0 0 0.7199</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_73">
+          <pose>-16.5935 -7.5184 0.0100 0 0 2.4216</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_74">
+          <pose>16.5935 -7.5184 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_75">
+          <pose>-16.5935 -7.5184 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_76">
+          <pose>17.9121 -9.0221 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_77">
+          <pose>-17.9121 -9.0221 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_78">
+          <pose>15.2748 -6.0147 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_79">
+          <pose>-15.2748 -6.0147 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_80">
+          <pose>19.2308 -10.5258 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_81">
+          <pose>-19.2308 -10.5258 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_82">
+          <pose>13.9561 -4.5110 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_83">
+          <pose>-13.9561 -4.5110 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_84">
+          <pose>17.5184 -6.5935 0.0100 0 0 0.8508</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_85">
+          <pose>-17.5184 -6.5935 0.0100 0 0 2.2907</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_86">
+          <pose>17.5184 -6.5935 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_87">
+          <pose>-17.5184 -6.5935 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_88">
+          <pose>19.0221 -7.9121 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_89">
+          <pose>-19.0221 -7.9121 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_90">
+          <pose>16.0147 -5.2748 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_91">
+          <pose>-16.0147 -5.2748 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_92">
+          <pose>20.5258 -9.2308 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_93">
+          <pose>-20.5258 -9.2308 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_94">
+          <pose>14.5110 -3.9561 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_95">
+          <pose>-14.5110 -3.9561 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_96">
+          <pose>18.3147 -5.5557 0.0100 0 0 0.9817</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_97">
+          <pose>-18.3147 -5.5557 0.0100 0 0 2.1598</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_98">
+          <pose>18.3147 -5.5557 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_99">
+          <pose>-18.3147 -5.5557 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_100">
+          <pose>19.9776 -6.6668 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_101">
+          <pose>-19.9776 -6.6668 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_102">
+          <pose>16.6518 -4.4446 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_103">
+          <pose>-16.6518 -4.4446 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_104">
+          <pose>21.6406 -7.7780 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_105">
+          <pose>-21.6406 -7.7780 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_106">
+          <pose>14.9888 -3.3334 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_107">
+          <pose>-14.9888 -3.3334 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_108">
+          <pose>18.9687 -4.4229 0.0100 0 0 1.1126</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_109">
+          <pose>-18.9687 -4.4229 0.0100 0 0 2.0289</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_110">
+          <pose>18.9687 -4.4229 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_111">
+          <pose>-18.9687 -4.4229 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_112">
+          <pose>20.7625 -5.3075 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_113">
+          <pose>-20.7625 -5.3075 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_114">
+          <pose>17.1750 -3.5383 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_115">
+          <pose>-17.1750 -3.5383 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_116">
+          <pose>22.5562 -6.1920 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_117">
+          <pose>-22.5562 -6.1920 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_118">
+          <pose>15.3812 -2.6537 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_119">
+          <pose>-15.3812 -2.6537 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_120">
+          <pose>19.4693 -3.2144 0.0100 0 0 1.2435</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_121">
+          <pose>-19.4693 -3.2144 0.0100 0 0 1.8980</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_122">
+          <pose>19.4693 -3.2144 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_123">
+          <pose>-19.4693 -3.2144 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_124">
+          <pose>21.3632 -3.8573 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_125">
+          <pose>-21.3632 -3.8573 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_126">
+          <pose>17.5754 -2.5715 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_127">
+          <pose>-17.5754 -2.5715 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_128">
+          <pose>23.2570 -4.5002 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_129">
+          <pose>-23.2570 -4.5002 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_130">
+          <pose>15.6816 -1.9286 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_131">
+          <pose>-15.6816 -1.9286 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_132">
+          <pose>19.8079 -1.9509 0.0100 0 0 1.3744</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_133">
+          <pose>-19.8079 -1.9509 0.0100 0 0 1.7671</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_134">
+          <pose>19.8079 -1.9509 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_135">
+          <pose>-19.8079 -1.9509 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_136">
+          <pose>21.7694 -2.3411 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_137">
+          <pose>-21.7694 -2.3411 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_138">
+          <pose>17.8463 -1.5607 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_139">
+          <pose>-17.8463 -1.5607 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_140">
+          <pose>23.7310 -2.7313 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_141">
+          <pose>-23.7310 -2.7313 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_142">
+          <pose>15.8847 -1.1705 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_143">
+          <pose>-15.8847 -1.1705 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_144">
+          <pose>19.9786 -0.6540 0.0100 0 0 1.5053</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_145">
+          <pose>-19.9786 -0.6540 0.0100 0 0 1.6362</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_146">
+          <pose>19.9786 -0.6540 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_147">
+          <pose>-19.9786 -0.6540 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_148">
+          <pose>21.9743 -0.7848 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_149">
+          <pose>-21.9743 -0.7848 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_150">
+          <pose>17.9829 -0.5232 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_151">
+          <pose>-17.9829 -0.5232 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_152">
+          <pose>23.9700 -0.9156 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_153">
+          <pose>-23.9700 -0.9156 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_154">
+          <pose>15.9872 -0.3924 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_155">
+          <pose>-15.9872 -0.3924 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_156">
+          <pose>19.9786 0.6540 0.0100 0 0 1.6362</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_157">
+          <pose>-19.9786 0.6540 0.0100 0 0 1.5053</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_158">
+          <pose>19.9786 0.6540 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_159">
+          <pose>-19.9786 0.6540 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_160">
+          <pose>21.9743 0.7848 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_161">
+          <pose>-21.9743 0.7848 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_162">
+          <pose>17.9829 0.5232 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_163">
+          <pose>-17.9829 0.5232 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_164">
+          <pose>23.9700 0.9156 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_165">
+          <pose>-23.9700 0.9156 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_166">
+          <pose>15.9872 0.3924 0.0200 0 0 1.6362</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_167">
+          <pose>-15.9872 0.3924 0.0200 0 0 1.5053</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_168">
+          <pose>19.8079 1.9509 0.0100 0 0 1.7671</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_169">
+          <pose>-19.8079 1.9509 0.0100 0 0 1.3744</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_170">
+          <pose>19.8079 1.9509 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_171">
+          <pose>-19.8079 1.9509 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_172">
+          <pose>21.7694 2.3411 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_173">
+          <pose>-21.7694 2.3411 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_174">
+          <pose>17.8463 1.5607 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_175">
+          <pose>-17.8463 1.5607 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_176">
+          <pose>23.7310 2.7313 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_177">
+          <pose>-23.7310 2.7313 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_178">
+          <pose>15.8847 1.1705 0.0200 0 0 1.7671</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_179">
+          <pose>-15.8847 1.1705 0.0200 0 0 1.3744</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_180">
+          <pose>19.4693 3.2144 0.0100 0 0 1.8980</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_181">
+          <pose>-19.4693 3.2144 0.0100 0 0 1.2435</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_182">
+          <pose>19.4693 3.2144 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_183">
+          <pose>-19.4693 3.2144 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_184">
+          <pose>21.3632 3.8573 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_185">
+          <pose>-21.3632 3.8573 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_186">
+          <pose>17.5754 2.5715 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_187">
+          <pose>-17.5754 2.5715 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_188">
+          <pose>23.2570 4.5002 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_189">
+          <pose>-23.2570 4.5002 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_190">
+          <pose>15.6816 1.9286 0.0200 0 0 1.8980</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_191">
+          <pose>-15.6816 1.9286 0.0200 0 0 1.2435</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_192">
+          <pose>18.9687 4.4229 0.0100 0 0 2.0289</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_193">
+          <pose>-18.9687 4.4229 0.0100 0 0 1.1126</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_194">
+          <pose>18.9687 4.4229 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_195">
+          <pose>-18.9687 4.4229 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_196">
+          <pose>20.7625 5.3075 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_197">
+          <pose>-20.7625 5.3075 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_198">
+          <pose>17.1750 3.5383 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_199">
+          <pose>-17.1750 3.5383 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_200">
+          <pose>22.5562 6.1920 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_201">
+          <pose>-22.5562 6.1920 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_202">
+          <pose>15.3812 2.6537 0.0200 0 0 2.0289</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_203">
+          <pose>-15.3812 2.6537 0.0200 0 0 1.1126</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_204">
+          <pose>18.3147 5.5557 0.0100 0 0 2.1598</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_205">
+          <pose>-18.3147 5.5557 0.0100 0 0 0.9817</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_206">
+          <pose>18.3147 5.5557 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_207">
+          <pose>-18.3147 5.5557 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_208">
+          <pose>19.9776 6.6668 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_209">
+          <pose>-19.9776 6.6668 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_210">
+          <pose>16.6518 4.4446 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_211">
+          <pose>-16.6518 4.4446 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_212">
+          <pose>21.6406 7.7780 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_213">
+          <pose>-21.6406 7.7780 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_214">
+          <pose>14.9888 3.3334 0.0200 0 0 2.1598</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_215">
+          <pose>-14.9888 3.3334 0.0200 0 0 0.9817</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_216">
+          <pose>17.5184 6.5935 0.0100 0 0 2.2907</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_217">
+          <pose>-17.5184 6.5935 0.0100 0 0 0.8508</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_218">
+          <pose>17.5184 6.5935 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_219">
+          <pose>-17.5184 6.5935 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_220">
+          <pose>19.0221 7.9121 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_221">
+          <pose>-19.0221 7.9121 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_222">
+          <pose>16.0147 5.2748 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_223">
+          <pose>-16.0147 5.2748 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_224">
+          <pose>20.5258 9.2308 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_225">
+          <pose>-20.5258 9.2308 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_226">
+          <pose>14.5110 3.9561 0.0200 0 0 2.2907</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_227">
+          <pose>-14.5110 3.9561 0.0200 0 0 0.8508</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_228">
+          <pose>16.5935 7.5184 0.0100 0 0 2.4216</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_229">
+          <pose>-16.5935 7.5184 0.0100 0 0 0.7199</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_230">
+          <pose>16.5935 7.5184 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_231">
+          <pose>-16.5935 7.5184 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_232">
+          <pose>17.9121 9.0221 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_233">
+          <pose>-17.9121 9.0221 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_234">
+          <pose>15.2748 6.0147 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_235">
+          <pose>-15.2748 6.0147 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_236">
+          <pose>19.2308 10.5258 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_237">
+          <pose>-19.2308 10.5258 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_238">
+          <pose>13.9561 4.5110 0.0200 0 0 2.4216</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_239">
+          <pose>-13.9561 4.5110 0.0200 0 0 0.7199</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_240">
+          <pose>15.5557 8.3147 0.0100 0 0 2.5525</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_241">
+          <pose>-15.5557 8.3147 0.0100 0 0 0.5890</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_242">
+          <pose>15.5557 8.3147 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_243">
+          <pose>-15.5557 8.3147 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_244">
+          <pose>16.6668 9.9776 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_245">
+          <pose>-16.6668 9.9776 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_246">
+          <pose>14.4446 6.6518 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_247">
+          <pose>-14.4446 6.6518 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_248">
+          <pose>17.7780 11.6406 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_249">
+          <pose>-17.7780 11.6406 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_250">
+          <pose>13.3334 4.9888 0.0200 0 0 2.5525</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_251">
+          <pose>-13.3334 4.9888 0.0200 0 0 0.5890</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_252">
+          <pose>14.4229 8.9687 0.0100 0 0 2.6834</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_253">
+          <pose>-14.4229 8.9687 0.0100 0 0 0.4581</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_254">
+          <pose>14.4229 8.9687 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_255">
+          <pose>-14.4229 8.9687 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_256">
+          <pose>15.3075 10.7625 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_257">
+          <pose>-15.3075 10.7625 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_258">
+          <pose>13.5383 7.1750 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_259">
+          <pose>-13.5383 7.1750 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_260">
+          <pose>16.1920 12.5562 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_261">
+          <pose>-16.1920 12.5562 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_262">
+          <pose>12.6537 5.3812 0.0200 0 0 2.6834</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_263">
+          <pose>-12.6537 5.3812 0.0200 0 0 0.4581</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_264">
+          <pose>13.2144 9.4693 0.0100 0 0 2.8143</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_265">
+          <pose>-13.2144 9.4693 0.0100 0 0 0.3272</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_266">
+          <pose>13.2144 9.4693 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_267">
+          <pose>-13.2144 9.4693 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_268">
+          <pose>13.8573 11.3632 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_269">
+          <pose>-13.8573 11.3632 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_270">
+          <pose>12.5715 7.5754 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_271">
+          <pose>-12.5715 7.5754 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_272">
+          <pose>14.5002 13.2570 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_273">
+          <pose>-14.5002 13.2570 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_274">
+          <pose>11.9286 5.6816 0.0200 0 0 2.8143</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_275">
+          <pose>-11.9286 5.6816 0.0200 0 0 0.3272</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_276">
+          <pose>11.9509 9.8079 0.0100 0 0 2.9452</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_277">
+          <pose>-11.9509 9.8079 0.0100 0 0 0.1963</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_278">
+          <pose>11.9509 9.8079 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_279">
+          <pose>-11.9509 9.8079 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_280">
+          <pose>12.3411 11.7694 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_281">
+          <pose>-12.3411 11.7694 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_282">
+          <pose>11.5607 7.8463 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_283">
+          <pose>-11.5607 7.8463 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_284">
+          <pose>12.7313 13.7310 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_285">
+          <pose>-12.7313 13.7310 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_286">
+          <pose>11.1705 5.8847 0.0200 0 0 2.9452</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_287">
+          <pose>-11.1705 5.8847 0.0200 0 0 0.1963</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_288">
+          <pose>10.6540 9.9786 0.0100 0 0 3.0761</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="asphalt_289">
+          <pose>-10.6540 9.9786 0.0100 0 0 0.0654</pose>
+          <geometry><box><size>1.3352 8.0000 0.01</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_290">
+          <pose>10.6540 9.9786 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="yellow_c_291">
+          <pose>-10.6540 9.9786 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.3352 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 0.8 0.0 1</ambient><diffuse>1.0 0.8 0.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_292">
+          <pose>10.7848 11.9743 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_L_293">
+          <pose>-10.7848 11.9743 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.6022 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_294">
+          <pose>10.5232 7.9829 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_in_R_295">
+          <pose>-10.5232 7.9829 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.0681 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_296">
+          <pose>10.9156 13.9700 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_L_297">
+          <pose>-10.9156 13.9700 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>1.8692 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_298">
+          <pose>10.3924 5.9872 0.0200 0 0 3.0761</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <visual name="white_out_R_299">
+          <pose>-10.3924 5.9872 0.0200 0 0 0.0654</pose>
+          <geometry><box><size>0.8011 0.2000 0.01</size></box></geometry>
+          <material><ambient>1.0 1.0 1.0 1</ambient><diffuse>1.0 1.0 1.0 1</diffuse></material>
+        </visual>
+        <!-- 차량이 떨어지지 않게 받쳐주는 투명한 물리 충돌 영역 -->
+        <collision name="track_collision">
+          <pose>0 0 0.005 0 0 0</pose>
+          <geometry><box><size>60 40 0.01</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+  </world>
+</sdf>

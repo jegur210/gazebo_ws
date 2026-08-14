@@ -1,0 +1,188 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="city_world">
+    <!-- 필수 플러그인 -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- 태양광 설정 -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 20 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.5 -0.9</direction>
+    </light>
+
+    <!-- ============================================== -->
+    <!-- [1] 도시 지반 및 인도 (6블록 구성) -->
+    <!-- ============================================== -->
+    <model name="city_ground">
+      <static>true</static>
+      <!-- 아스팔트 바닥 -->
+      <link name="asphalt">
+        <collision name="collision"><geometry><box><size>200 150 0.1</size></box></geometry></collision>
+        <visual name="visual">
+          <geometry><box><size>200 150 0.1</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+      </link>
+
+      <!-- 6개의 인도 블록 -->
+      <link name="sidewalks">
+        <visual name="block1"><pose>-73.5 41 0.15 0 0 0</pose><geometry><box><size>53 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+        <visual name="block2"><pose>0 41 0.15 0 0 0</pose><geometry><box><size>66 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+        <visual name="block3"><pose>73.5 41 0.15 0 0 0</pose><geometry><box><size>53 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+        <visual name="block4"><pose>-73.5 -41 0.15 0 0 0</pose><geometry><box><size>53 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+        <visual name="block5"><pose>0 -41 0.15 0 0 0</pose><geometry><box><size>66 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+        <visual name="block6"><pose>73.5 -41 0.15 0 0 0</pose><geometry><box><size>53 68 0.1</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================== -->
+    <!-- [2] 도로 차선 마킹 (왕복 4차선) -->
+    <!-- ============================================== -->
+    <model name="road_markings">
+      <static>true</static>
+      <link name="lines">
+        <!-- 메인 가로축 도로 -->
+        <visual name="x_center1"><pose>0 0.15 0.055 0 0 0</pose><geometry><box><size>200 0.1 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+        <visual name="x_center2"><pose>0 -0.15 0.055 0 0 0</pose><geometry><box><size>200 0.1 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+        <visual name="x_lane_L"><pose>0 3.5 0.055 0 0 0</pose><geometry><box><size>200 0.1 0.01</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        <visual name="x_lane_R"><pose>0 -3.5 0.055 0 0 0</pose><geometry><box><size>200 0.1 0.01</size></box></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material></visual>
+        
+        <!-- 세로축 교차 도로 -->
+        <visual name="y1_center1"><pose>-39.85 0 0.056 0 0 0</pose><geometry><box><size>0.1 150 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+        <visual name="y1_center2"><pose>-40.15 0 0.056 0 0 0</pose><geometry><box><size>0.1 150 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+        <visual name="y2_center1"><pose>39.85 0 0.056 0 0 0</pose><geometry><box><size>0.1 150 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+        <visual name="y2_center2"><pose>40.15 0 0.056 0 0 0</pose><geometry><box><size>0.1 150 0.01</size></box></geometry><material><ambient>1 0.8 0 1</ambient><diffuse>1 0.8 0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================== -->
+    <!-- [3] 교차로 횡단보도 (Zebra Crossings) -->
+    <!-- ============================================== -->
+    <model name="crosswalks">
+      <static>true</static>
+      <link name="stripes">
+        <!-- 교차로 1 횡단보도 -->
+        <visual name="cw1_top"><pose>-40 9 0.057 0 0 0</pose><geometry><box><size>12 2 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw1_bot"><pose>-40 -9 0.057 0 0 0</pose><geometry><box><size>12 2 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw1_left"><pose>-49 0 0.057 0 0 0</pose><geometry><box><size>2 12 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw1_right"><pose>-31 0 0.057 0 0 0</pose><geometry><box><size>2 12 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+
+        <!-- 교차로 2 횡단보도 -->
+        <visual name="cw2_top"><pose>40 9 0.057 0 0 0</pose><geometry><box><size>12 2 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw2_bot"><pose>40 -9 0.057 0 0 0</pose><geometry><box><size>12 2 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw2_left"><pose>31 0 0.057 0 0 0</pose><geometry><box><size>2 12 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+        <visual name="cw2_right"><pose>49 0 0.057 0 0 0</pose><geometry><box><size>2 12 0.01</size></box></geometry><material><ambient>0.9 0.9 0.9 1</ambient><diffuse>0.9 0.9 0.9 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================== -->
+    <!-- [4] 교차로 신호등 (8개 모서리) -->
+    <!-- ============================================== -->
+    <model name="traffic_lights">
+      <static>true</static>
+      <link name="poles">
+        <!-- 교차로 1 모서리 신호등 -->
+        <visual name="tl1_1"><pose>-48 8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl1_1_light"><pose>-47.5 8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual>
+
+        <visual name="tl1_2"><pose>-32 8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl1_2_light"><pose>-32.5 8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual>
+
+        <visual name="tl1_3"><pose>-48 -8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl1_3_light"><pose>-47.5 -8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual>
+
+        <visual name="tl1_4"><pose>-32 -8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl1_4_light"><pose>-32.5 -8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual>
+
+        <!-- 교차로 2 모서리 신호등 -->
+        <visual name="tl2_1"><pose>32 8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl2_1_light"><pose>32.5 8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual>
+
+        <visual name="tl2_2"><pose>48 8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl2_2_light"><pose>47.5 8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual>
+
+        <visual name="tl2_3"><pose>32 -8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl2_3_light"><pose>32.5 -8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual>
+
+        <visual name="tl2_4"><pose>48 -8 2 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>4</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual>
+        <visual name="tl2_4_light"><pose>47.5 -8 3.8 0 0 0</pose><geometry><box><size>0.5 0.5 0.5</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================== -->
+    <!-- [5] 고층 빌딩 군집 (각 블록당 2~3개 배치) -->
+    <!-- ============================================== -->
+    <model name="city_buildings">
+      <static>true</static>
+      <!-- 블록 1 -->
+      <link name="b1_1">
+        <pose>-80 30 20.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 20 40</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>20 20 40</size></box></geometry><material><ambient>0.2 0.3 0.5 1</ambient><diffuse>0.2 0.3 0.5 1</diffuse></material></visual>
+      </link>
+      <link name="b1_2">
+        <pose>-60 55 35.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>25 15 70</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>25 15 70</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material></visual>
+      </link>
+
+      <!-- 블록 2 -->
+      <link name="b2_1">
+        <pose>-15 25 25.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>30 20 50</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>30 20 50</size></box></geometry><material><ambient>0.6 0.5 0.4 1</ambient><diffuse>0.6 0.5 0.4 1</diffuse></material></visual>
+      </link>
+      <link name="b2_2">
+        <pose>15 50 45.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 30 90</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>20 30 90</size></box></geometry><material><ambient>0.1 0.5 0.6 1</ambient><diffuse>0.1 0.5 0.6 1</diffuse></material></visual>
+      </link>
+
+      <!-- 블록 3 -->
+      <link name="b3_1">
+        <pose>70 40 15.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>35 35 30</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>35 35 30</size></box></geometry><material><ambient>0.3 0.3 0.3 1</ambient><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+      </link>
+
+      <!-- 블록 4 -->
+      <link name="b4_1">
+        <pose>-80 -40 25.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>25 25 50</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>25 25 50</size></box></geometry><material><ambient>0.5 0.2 0.2 1</ambient><diffuse>0.5 0.2 0.2 1</diffuse></material></visual>
+      </link>
+      <link name="b4_2">
+        <pose>-55 -60 15.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>15 15 30</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>15 15 30</size></box></geometry><material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- 블록 5 -->
+      <link name="b5_1">
+        <pose>0 -30 40.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>40 20 80</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>40 20 80</size></box></geometry><material><ambient>0.2 0.6 0.3 1</ambient><diffuse>0.2 0.6 0.3 1</diffuse></material></visual>
+      </link>
+      <link name="b5_2">
+        <pose>0 -60 20.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 20 40</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>20 20 40</size></box></geometry><material><ambient>0.4 0.4 0.6 1</ambient><diffuse>0.4 0.4 0.6 1</diffuse></material></visual>
+      </link>
+
+      <!-- 블록 6 -->
+      <link name="b6_1">
+        <pose>60 -50 35.2 0 0 0</pose>
+        <collision name="c"><geometry><box><size>20 40 70</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>20 40 70</size></box></geometry><material><ambient>0.6 0.4 0.2 1</ambient><diffuse>0.6 0.4 0.2 1</diffuse></material></visual>
+      </link>
+    </model>
+  </world>
+</sdf>

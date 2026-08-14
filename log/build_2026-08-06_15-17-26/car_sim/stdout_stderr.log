@@ -1,0 +1,20 @@
+running develop
+running egg_info
+writing car_sim.egg-info/PKG-INFO
+writing dependency_links to car_sim.egg-info/dependency_links.txt
+writing requirements to car_sim.egg-info/requires.txt
+writing top-level names to car_sim.egg-info/top_level.txt
+reading manifest file 'car_sim.egg-info/SOURCES.txt'
+writing manifest file 'car_sim.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car-sim.egg-link (link to .)
+
+Installed /home/jegur/gazebo_ws/build/car_sim
+running symlink_data
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/resource/car_sim -> /home/jegur/gazebo_ws/install/car_sim/share/ament_index/resource_index/packages
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/package.xml -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/launch/car.launch.py -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/launch
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/urdf/gazebo.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/urdf/inertial.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/urdf/car.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+symbolically linking /home/jegur/gazebo_ws/build/car_sim/map/city_world.sdf -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds

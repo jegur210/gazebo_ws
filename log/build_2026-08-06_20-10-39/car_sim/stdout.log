@@ -1,0 +1,38 @@
+running develop
+Removing /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car-sim.egg-link (link to .)
+running egg_info
+writing ../../build/car_sim/car_sim.egg-info/PKG-INFO
+writing dependency_links to ../../build/car_sim/car_sim.egg-info/dependency_links.txt
+writing entry points to ../../build/car_sim/car_sim.egg-info/entry_points.txt
+writing requirements to ../../build/car_sim/car_sim.egg-info/requires.txt
+writing top-level names to ../../build/car_sim/car_sim.egg-info/top_level.txt
+reading manifest file '../../build/car_sim/car_sim.egg-info/SOURCES.txt'
+writing manifest file '../../build/car_sim/car_sim.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/jegur/gazebo_ws/build/car_sim/build/lib/camera
+copying camera/camera_sensor.py -> /home/jegur/gazebo_ws/build/car_sim/build/lib/camera
+copying camera/__init__.py -> /home/jegur/gazebo_ws/build/car_sim/build/lib/camera
+running install
+running install_lib
+creating /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim
+copying /home/jegur/gazebo_ws/build/car_sim/build/lib/car_sim/__init__.py -> /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim
+creating /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera
+copying /home/jegur/gazebo_ws/build/car_sim/build/lib/camera/camera_sensor.py -> /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera
+copying /home/jegur/gazebo_ws/build/car_sim/build/lib/camera/__init__.py -> /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera
+byte-compiling /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/camera_sensor.py to camera_sensor.cpython-312.pyc
+byte-compiling /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__init__.py to __init__.cpython-312.pyc
+running install_data
+copying resource/car_sim -> /home/jegur/gazebo_ws/install/car_sim/share/ament_index/resource_index/packages
+copying package.xml -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim
+copying launch/car.launch.py -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/launch
+copying urdf/gazebo.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+copying urdf/inertial.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+copying urdf/car.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+copying map/city_world.sdf -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds
+running install_egg_info
+Copying ../../build/car_sim/car_sim.egg-info to /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info
+running install_scripts
+Installing camera_sensor script to /home/jegur/gazebo_ws/install/car_sim/lib/car_sim
+writing list of installed files to '/home/jegur/gazebo_ws/build/car_sim/install.log'
