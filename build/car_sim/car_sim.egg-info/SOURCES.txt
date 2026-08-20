@@ -11,6 +11,7 @@ setup.py
 camera/__init__.py
 camera/camera_sensor.py
 camera/camera_sensor_test.py
+camera/camera_test.py
 car_sim/__init__.py
 launch/car.launch.py
 map/city_world.sdf

@@ -1,3 +1,4 @@
 [console_scripts]
 camera_sensor = camera.camera_sensor:main
 camera_sensor_test = camera.camera_sensor_test:main
+camera_test = camera.camera_test:main

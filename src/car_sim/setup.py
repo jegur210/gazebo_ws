@@ -34,6 +34,7 @@ setup(
         'console_scripts': [
             'camera_sensor_test = camera.camera_sensor_test:main',
             'camera_sensor = camera.camera_sensor:main',  # 실제 제어 노드 추가
+            'camera_test = camera.camera_test:main',  # 테스트용 노드 추가
         ],
     },
 )

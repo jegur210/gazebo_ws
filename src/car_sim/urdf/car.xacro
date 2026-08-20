@@ -272,6 +272,6 @@
         <parent link="body_link"/>
         <child link="camera_link"/>
         <!-- x: 차체 길이의 절반(맨 앞), z: 차체 높이의 절반 + 약간 위 -->
-        <origin xyz="${body_length/2} 0 ${body_height/2 + 0.05}" rpy="0 0 0"/>
+        <origin xyz="${body_length/2} 0 ${body_height/2 + 0.05}" rpy="0 0.26 0"/>
     </joint>
 </robot>
