@@ -24,6 +24,7 @@ def generate_launch_description():
     pkg_path = os.path.join(get_package_share_directory(package_name))
     xacro_file = os.path.join(pkg_path, "urdf", "car.xacro")
     robot_description = xacro.process_file(xacro_file)
+    param_dir = os.path.join(pkg_path, 'param', 'bev_param.yaml')
     
     # 4. 로봇 상태 발행기(Robot State Publisher)
     params = {"robot_description": robot_description.toxml(), "use_sim_time": use_sim_time}
@@ -75,6 +76,17 @@ def generate_launch_description():
         output='screen'
     )
 
+    lane_tracker_node = Node(
+        package=package_name,                          # 패키지 이름 (car_sim)
+        executable="camera_test",    # 실행파일명 (또는 setup.py의 entry_points)
+        name="camera_test",
+        output="screen",
+        parameters=[
+            param_dir,                                 # 불러올 YAML 파일 경로
+            {"use_sim_time": use_sim_time}             # 추가 파라미터를 딕셔너리로 병합 가능
+        ]
+    )
+
     # LaunchDescription return에 image_bridge 추가
     return LaunchDescription([
         declare_use_sim_time,
@@ -83,4 +95,5 @@ def generate_launch_description():
         spawn_entity,
         bridge,
         image_bridge, # 추가
+        lane_tracker_node
     ])

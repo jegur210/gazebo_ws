@@ -16,6 +16,7 @@
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf/car.xacro
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds/control_world.sdf
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds/city_world.sdf
+/home/jegur/gazebo_ws/install/car_sim/share/car_sim/param/bev_param.yaml
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/requires.txt
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/SOURCES.txt
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/dependency_links.txt

@@ -16,6 +16,7 @@ car_sim/__init__.py
 launch/car.launch.py
 map/city_world.sdf
 map/control_world.sdf
+param/bev_param.yaml
 resource/car_sim
 test/test_copyright.py
 test/test_flake8.py

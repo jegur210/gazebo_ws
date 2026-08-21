@@ -1,0 +1,6 @@
+bottom_x: 0.02
+bottom_y: 0.95
+start_type_description_service: true
+top_x: 0.15
+top_y: 0.45
+use_sim_time: false

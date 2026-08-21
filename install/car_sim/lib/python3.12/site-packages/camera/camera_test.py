@@ -13,7 +13,7 @@ class CameraSensorTrackingControl(Node):
         
         # 1. ROS 2 파라미터 선언 (ROI 튜닝용 비율 값: 0.0 ~ 1.0)
         self.declare_parameter('top_x', 0.20)      # 상단 좌우 여백 비율 (0.20 -> 좌: 20%, 우: 80%)
-        self.declare_parameter('top_y', 0.50)      # 상단 Y 높이 비율 (0.50 -> 화면 중앙)
+        self.declare_parameter('top_y', 0.40)      # 상단 Y 높이 비율 (0.50 -> 화면 중앙)
         self.declare_parameter('bottom_x', 0.02)   # 하단 좌우 여백 비율 (0.02 -> 좌: 2%, 우: 98%)
         self.declare_parameter('bottom_y', 0.95)   # 하단 Y 높이 비율 (0.95 -> 화면 맨 아래쪽)
 
