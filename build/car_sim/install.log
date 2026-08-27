@@ -1,9 +1,11 @@
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim/__init__.py
+/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/test.py
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/camera_sensor_test.py
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/camera_sensor.py
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__init__.py
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/camera_test.py
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim/__pycache__/__init__.cpython-312.pyc
+/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__pycache__/test.cpython-312.pyc
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__pycache__/camera_sensor_test.cpython-312.pyc
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__pycache__/camera_sensor.cpython-312.pyc
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/camera/__pycache__/__init__.cpython-312.pyc
@@ -17,6 +19,7 @@
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds/control_world.sdf
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/worlds/city_world.sdf
 /home/jegur/gazebo_ws/install/car_sim/share/car_sim/param/bev_param.yaml
+/home/jegur/gazebo_ws/install/car_sim/share/car_sim/param/camera.yaml
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/requires.txt
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/SOURCES.txt
 /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info/dependency_links.txt

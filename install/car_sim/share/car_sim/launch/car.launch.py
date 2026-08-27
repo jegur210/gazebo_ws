@@ -24,7 +24,8 @@ def generate_launch_description():
     pkg_path = os.path.join(get_package_share_directory(package_name))
     xacro_file = os.path.join(pkg_path, "urdf", "car.xacro")
     robot_description = xacro.process_file(xacro_file)
-    param_dir = os.path.join(pkg_path, 'param', 'bev_param.yaml')
+    
+    param_dir = os.path.join(pkg_path, 'param', 'camera.yaml')
     
     # 4. 로봇 상태 발행기(Robot State Publisher)
     params = {"robot_description": robot_description.toxml(), "use_sim_time": use_sim_time}
