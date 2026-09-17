@@ -53,6 +53,8 @@ class CameraSensorTrackingControl(Node):
         self.right_fit = None  
         self.lane_width = 380.0   
 
+        self.alpha = 0.2  # 최신 프레임 반영 비율 (값이 작을수록 부드럽지만 반응이 느려짐)
+
         # [최적화 1] 디버그 모드 플래그 (실제 주행 시 False로 바꾸면 처리 속도 2~3배 향상)
         self.debug_mode = True  
 
@@ -333,6 +335,22 @@ class CameraSensorTrackingControl(Node):
         new_warp = cv2.warpPerspective(color_warp, inv_matrix, (original_img.shape[1], original_img.shape[0]))
         return cv2.addWeighted(original_img, 1, new_warp, 0.4, 0)
 
+    def update_lane_fit(self, current_left_fit, current_right_fit):
+        if current_left_fit is None or current_right_fit is None:
+            return
+    
+        # 1. 이전 피팅 기록이 없다면 현재 값으로 초기화
+        if self.left_fit is None or self.right_fit is None:
+            self.left_fit = current_left_fit
+            self.right_fit = current_right_fit
+            return
+
+        # 2. 시간축 평활화 (Exponential Moving Average) 적용
+        if current_left_fit is not None and current_right_fit is not None:
+            self.left_fit = self.alpha * current_left_fit + (1 - self.alpha) * self.left_fit
+            self.right_fit = self.alpha * current_right_fit + (1 - self.alpha) * self.right_fit
+
+
     def image_callback(self, msg):
         frame = self.br.imgmsg_to_cv2(msg, "bgr8")
         warped_bgr, inv_matrix = self.bird_eye_view(frame)
@@ -365,6 +383,8 @@ class CameraSensorTrackingControl(Node):
             self.fail_count = 0
             self.left_fit = current_left_fit
             self.right_fit = current_right_fit
+
+        self.update_lane_fit(current_left_fit,current_right_fit)
 
         result_lane_img = self.draw_lane_area(frame, binary_bev, self.left_fit, self.right_fit, inv_matrix)
 
