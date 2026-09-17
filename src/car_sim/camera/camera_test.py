@@ -20,10 +20,10 @@ class CameraSensorTrackingControl(Node):
         self.declare_parameter('bottom_x', 0.00, range_desc)
         self.declare_parameter('bottom_y', 0.95, range_desc)
 
-        self.declare_parameter('left_search_min', 0.10, range_desc)
+        self.declare_parameter('left_search_min', 0.00, range_desc)
         self.declare_parameter('left_search_max', 0.45, range_desc)
         self.declare_parameter('right_search_min', 0.55, range_desc)
-        self.declare_parameter('right_search_max', 0.90, range_desc)
+        self.declare_parameter('right_search_max', 1.00, range_desc)
 
         self.top_x = self.get_parameter('top_x').value
         self.top_y = self.get_parameter('top_y').value
@@ -60,6 +60,9 @@ class CameraSensorTrackingControl(Node):
         self.ploty = np.linspace(0, self.bev_h - 1, self.bev_h)
         self.morph_kernel = np.ones((3, 3), np.uint8)
 
+        self.fail_count = 0
+        self.max_fail_count = 3  # 연속 3프레임 실패 시 완전 reset
+        
     def parameter_callback(self, params):
         for param in params:
             if param.name == 'top_x': self.top_x = param.value
@@ -87,35 +90,104 @@ class CameraSensorTrackingControl(Node):
         matrix = cv2.getPerspectiveTransform(src_pts, dst_pts)
         inv_matrix = cv2.getPerspectiveTransform(dst_pts, src_pts)
         warped = cv2.warpPerspective(img, matrix, (self.bev_w, self.bev_h))
+        
         return warped, inv_matrix
 
     def binarize_lane(self, bgr_frame):
-        # [최적화 3] HSV 필터링 최적화
         hsv = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2HSV)
         
         yellow_mask = cv2.inRange(hsv, np.array([10, 60, 60]), np.array([40, 255, 255]))
         white_mask = cv2.inRange(hsv, np.array([0, 0, 150]), np.array([180, 50, 255]))
         color_binary = cv2.bitwise_or(yellow_mask, white_mask)
 
-        # [최적화 4] Sobel 연산을 CV_8U로 직접 받아 가속
         gray = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2GRAY)
+        _, gray_binary = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)
+
         sobelx = cv2.Sobel(gray, cv2.CV_8U, 1, 0, ksize=3)
         _, sobel_binary = cv2.threshold(sobelx, 30, 255, cv2.THRESH_BINARY)
 
-        combined_binary = cv2.bitwise_or(color_binary, sobel_binary)
+        combined_binary = cv2.bitwise_or(color_binary, gray_binary)
+        combined_binary = cv2.bitwise_or(combined_binary, sobel_binary)
+        
         return cv2.morphologyEx(combined_binary, cv2.MORPH_CLOSE, self.morph_kernel)
 
-    def recover_missing_lane(self, left_fit, right_fit):
-        if left_fit is not None and right_fit is not None:
-            self.lane_width = right_fit[2] - left_fit[2]
-            return left_fit, right_fit
+    def sanity_check(self, left_fit, right_fit):
+        """다항식 추정 결과의 물리적 타당성 검증"""
+        if left_fit is None or right_fit is None:
+            return False
 
+        # 1. 곡률 유사성 검증 (0.0030 허용)
+        A_diff = abs(left_fit[0] - right_fit[0])
+        if A_diff > 0.0030:
+            return False
+
+        # 2. 도로 폭 연산
+        y_bottom = self.bev_h - 1
+        y_top = 0
+
+        left_x_bottom = left_fit[0]*(y_bottom**2) + left_fit[1]*y_bottom + left_fit[2]
+        right_x_bottom = right_fit[0]*(y_bottom**2) + right_fit[1]*y_bottom + right_fit[2]
+        bottom_width = right_x_bottom - left_x_bottom
+
+        left_x_top = left_fit[0]*(y_top**2) + left_fit[1]*y_top + left_fit[2]
+        right_x_top = right_fit[0]*(y_top**2) + right_fit[1]*y_top + right_fit[2]
+        top_width = right_x_top - left_x_top
+
+        # 3. 화면 양 끝 오검출 방지 (BEV 너비 640px 기준)
+        # 하단 폭이 600px 이상이면 양 끝 윈도우 오검출로 판단하여 Reject
+        if bottom_width > 600.0 or bottom_width < 150.0:
+            return False
+
+        # 4. 상대적 폭 비율 검증
+        min_w_bottom = self.lane_width * 0.60
+        max_w_bottom = self.lane_width * 1.50
+        
+        min_w_top = self.lane_width * 0.40
+        max_w_top = self.lane_width * 1.60
+
+        if not (min_w_bottom < bottom_width < max_w_bottom):
+            return False
+
+        if not (min_w_top < top_width < max_w_top):
+            return False
+        
+        #self.get_logger().info()
+        return True
+    
+    def process_lane_fitting(self, left_fit, right_fit):
+        """Fitting -> Sanity Check -> Advanced Recovery -> Fallback 파이프라인"""
+        
+        # [Step 1] 두 차선 모두 검출된 경우 Sanity Check 진행
+        if left_fit is not None and right_fit is not None:
+            if self.sanity_check(left_fit, right_fit):
+                y_bottom = self.bev_h - 1
+                x_left = left_fit[0]*(y_bottom**2) + left_fit[1]*y_bottom + left_fit[2]
+                x_right = right_fit[0]*(y_bottom**2) + right_fit[1]*y_bottom + right_fit[2]
+                self.lane_width = abs(x_right - x_left)
+                return left_fit, right_fit
+            else:
+                # 검증 실패 시 한쪽 차선을 버리고 복원 로직으로 이관
+                left_fit, right_fit = None, None
+
+        # [Step 2] 한쪽 차선만 검출되었거나 검증 실패 시: 접선/법선 기울기 기반 곡률 복원
         if left_fit is not None and right_fit is None:
-            right_fit = left_fit.copy()
-            right_fit[2] += self.lane_width
+            eval_y = np.linspace(0, self.bev_h - 1, 10)
+            left_x = left_fit[0]*(eval_y**2) + left_fit[1]*eval_y + left_fit[2]
+            dx_dy = 2 * left_fit[0] * eval_y + left_fit[1]
+            right_x = left_x + self.lane_width * np.sqrt(1 + dx_dy**2)
+            right_fit = np.polyfit(eval_y, right_x, 2)
+
         elif left_fit is None and right_fit is not None:
-            left_fit = right_fit.copy()
-            left_fit[2] -= self.lane_width
+            eval_y = np.linspace(0, self.bev_h - 1, 10)
+            right_x = right_fit[0]*(eval_y**2) + right_fit[1]*eval_y + right_fit[2]
+            dx_dy = 2 * right_fit[0] * eval_y + right_fit[1]
+            left_x = right_x - self.lane_width * np.sqrt(1 + dx_dy**2)
+            left_fit = np.polyfit(eval_y, left_x, 2)
+
+        # [Step 3] 양쪽 모두 놓치거나 복원도 실패한 경우: 직전 프레임 계수 재사용 (Fallback)
+        elif left_fit is None and right_fit is None:
+            left_fit = self.left_fit
+            right_fit = self.right_fit
 
         return left_fit, right_fit
 
@@ -178,7 +250,7 @@ class CameraSensorTrackingControl(Node):
         else:
             range_visual_img = None
 
-        left_fit, right_fit = self.recover_missing_lane(left_fit, right_fit)
+        left_fit, right_fit = self.process_lane_fitting(left_fit, right_fit)
         return out_img, range_visual_img, left_fit, right_fit
 
     def search_around_poly(self, binary_warped):
@@ -218,7 +290,7 @@ class CameraSensorTrackingControl(Node):
         else:
             range_visual_img = None
 
-        left_fit, right_fit = self.recover_missing_lane(left_fit, right_fit)
+        left_fit, right_fit = self.process_lane_fitting(left_fit, right_fit)
         return out_img, range_visual_img, left_fit, right_fit
 
     def generate_range_visual_img(self, out_img, l_min_idx, l_max_idx, r_min_idx, r_max_idx):
@@ -266,21 +338,51 @@ class CameraSensorTrackingControl(Node):
         warped_bgr, inv_matrix = self.bird_eye_view(frame)
         binary_bev = self.binarize_lane(warped_bgr)
 
+        current_left_fit, current_right_fit = None, None
+        is_margin_search_success = False  #Margin Search 성공 여부 플래그
+
+        # 1. 기존 Fit이 존재하면 Margin Search 시도
         if self.left_fit is not None and self.right_fit is not None:
             sliding_window_img, range_visual_img, current_left_fit, current_right_fit = self.search_around_poly(binary_bev)
-        else:
-            current_left_fit, current_right_fit = None, None
 
+            if current_left_fit is not None and current_right_fit is not None:
+                is_margin_search_success = True
+
+        # 2. Margin Search 실패 시 Sliding Window로 Fallback
         if current_left_fit is None or current_right_fit is None:
             sliding_window_img, range_visual_img, current_left_fit, current_right_fit = self.fit_polynomial_sliding_window(binary_bev)
 
-        self.left_fit = current_left_fit
-        self.right_fit = current_right_fit
+    
+        # 3. 연속 실패 감지 및 Fit Reset 로직 (핵심 수정 부분)
+        if current_left_fit is None or current_right_fit is None:
+            self.fail_count += 1
+            if self.fail_count >= self.max_fail_count:
+                # 커브 탈출 후 어긋남 방지를 위해 이전 Fit 기록 완전 삭제
+                self.left_fit = None
+                self.right_fit = None
+                self.fail_count = 0
+        else:
+            self.fail_count = 0
+            self.left_fit = current_left_fit
+            self.right_fit = current_right_fit
 
         result_lane_img = self.draw_lane_area(frame, binary_bev, self.left_fit, self.right_fit, inv_matrix)
 
+        if self.debug_mode and sliding_window_img is not None:
+            if is_margin_search_success:
+                status_text = "MODE: MARGIN SEARCH (SUCCESS)"
+                text_color = (0, 255, 0)  # 성공: 초록색
+            else:
+                status_text = "MODE: SLIDING WINDOW (FALLBACK)"
+                text_color = (0, 0, 255)  # 실패 및 전환: 빨간색
+
+            cv2.putText(sliding_window_img, status_text, (20, 40),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, text_color, 2)
+            
         # [최적화 5] 디버그 모드 상태에서만 cv2.imshow 연산 수행
+        # 디버그 창 시각화
         if self.debug_mode:
+            cv2.imshow("0. Binary BEV", binary_bev)  # 이진화 영상 확인용 창
             if sliding_window_img is not None:
                 cv2.imshow("1. Sliding Window / Margin Search", sliding_window_img)
             cv2.imshow("2. Final Lane Tracking", result_lane_img)

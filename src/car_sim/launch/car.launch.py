@@ -51,7 +51,8 @@ def generate_launch_description():
     spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
-        arguments=["-topic", "robot_description", "-name", "with_robot"],
+        arguments=["-topic", "robot_description", "-name", "with_robot",
+                   '-x','10.0','-y', '20.0', '-z', '0.1'],
         output="screen",
     )
 
