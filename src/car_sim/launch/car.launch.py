@@ -52,7 +52,9 @@ def generate_launch_description():
         package="ros_gz_sim",
         executable="create",
         arguments=["-topic", "robot_description", "-name", "with_robot",
-                   '-x','10.0','-y', '20.0', '-z', '0.1'],
+                   #'-x','278.0','-y', '-134.0', '-z', '10.0', '-R', '0.00', '-P', '0.0', '-Y', '-0.75'  
+                   '-x','10.0','-y', '20.0', '-z', '0.1'
+                   ],
         output="screen",
     )
 

@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import SetParametersResult, ParameterDescriptor, FloatingPointRange
 from sensor_msgs.msg import Image
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from cv_bridge import CvBridge
 import cv2
@@ -64,6 +65,20 @@ class CameraSensorTrackingControl(Node):
 
         self.fail_count = 0
         self.max_fail_count = 3  # 연속 3프레임 실패 시 완전 reset
+
+        # [제어 제원 선언]
+        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        
+        # 제어 파라미터
+
+        self.declare_parameter('kp', 0.003)
+        self.declare_parameter('kd', 0.0005)
+
+        self.target_speed = 0.5   # m/s (직진 속도)
+        self.prev_error = 0.0
+        
+        # 픽셀 - 미터 변환 계수 (카메라 해상도/BEV 시야각에 맞춰 조정)
+        self.xm_per_pix = 3.7 / 380.0  # 3.7m 차선 폭 / 380px 기준
         
     def parameter_callback(self, params):
         for param in params:
@@ -350,6 +365,45 @@ class CameraSensorTrackingControl(Node):
             self.left_fit = self.alpha * current_left_fit + (1 - self.alpha) * self.left_fit
             self.right_fit = self.alpha * current_right_fit + (1 - self.alpha) * self.right_fit
 
+    def calculate_control(self, left_fit, right_fit):
+        if left_fit is None or right_fit is None:
+            # 차선을 놓친 경우 감속 또는 정지 명령
+            return 0.0, 0.0
+
+        # 1. 차량 바로 앞(BEV 하단 y_eval)에서의 차선 중앙점 연산
+        kp = self.get_parameter('kp').get_parameter_value().double_value
+        kd = self.get_parameter('kd').get_parameter_value().double_value
+
+        # 3. 횡방향 오차(e_y) 계산
+        y_eval = self.bev_h - 1
+        left_x = left_fit[0]*(y_eval**2) + left_fit[1]*y_eval + left_fit[2]
+        right_x = right_fit[0]*(y_eval**2) + right_fit[1]*y_eval + right_fit[2]
+
+        lane_center_x = (left_x + right_x) / 2.0
+        img_center_x = self.bev_w / 2.0
+
+        error_pix = img_center_x - lane_center_x
+        error_m = error_pix * self.xm_per_pix
+
+        # 4. PD 제어 연산
+        error_diff = error_m - self.prev_error
+        steering_angle = (kp * error_m) + (kd * error_diff)
+        self.prev_error = error_m
+
+        # 5. 최대 조향각 Limiter
+        max_steer = 0.5  # rad
+        steering_angle = max(-max_steer, min(max_steer, steering_angle))
+
+        # 디버그 로그 (f-string 적용)
+        self.get_logger().info(f"[CONTROL] Kp: {kp:.4f} | Kd: {kd:.5f} | Steer: {steering_angle:.3f}")
+
+        return self.target_speed, steering_angle
+
+    def publish_cmd_vel(self, linear_v, angular_z):
+        cmd = Twist()
+        cmd.linear.x = float(linear_v)
+        cmd.angular.z = float(angular_z)
+        self.cmd_vel_pub.publish(cmd)
 
     def image_callback(self, msg):
         frame = self.br.imgmsg_to_cv2(msg, "bgr8")
@@ -387,6 +441,9 @@ class CameraSensorTrackingControl(Node):
         self.update_lane_fit(current_left_fit,current_right_fit)
 
         result_lane_img = self.draw_lane_area(frame, binary_bev, self.left_fit, self.right_fit, inv_matrix)
+
+        speed, steering = self.calculate_control(self.left_fit, self.right_fit)
+        self.publish_cmd_vel(speed, steering)
 
         if self.debug_mode and sliding_window_img is not None:
             if is_margin_search_success:

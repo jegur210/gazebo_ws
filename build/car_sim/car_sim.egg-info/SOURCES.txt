@@ -17,6 +17,7 @@ car_sim/__init__.py
 launch/car.launch.py
 map/city_world.sdf
 map/control_world.sdf
+map/track_world.sdf
 param/bev_param.yaml
 param/camera.yaml
 resource/car_sim

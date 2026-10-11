@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="control_world">
+
+    <!-- Modern Gazebo 필수 플러그인 -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- 태양광 조명 -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- 트랙 모델 로드 (최신 Gazebo Fuel URL 적용 및 위치 고정) -->
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Sonoma Raceway</uri>
+      <name>sonoma_raceway</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!-- Gazebo 커스텀 GUI 패널 설정 -->
+    <gui fullscreen="0">
+      <!-- 1. 기본 3D 뷰포트 및 렌더링 플러그인 (MinimalScene 대신 GzScene3D 사용) -->
+      <plugin filename="GzScene3D" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-6 0 6 0 0.5 0</camera_pose>
+      </plugin>
+
+      <!-- 2. 재생/일시정지 제어 패널 -->
+      <plugin filename="WorldControl" name="World control">
+        <gz-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+      </plugin>
+
+      <!-- 3. 자율주행 온/오프 토픽 발행 버튼 (Publisher) -->
+      <plugin filename="Publisher" name="Autonomy Switch">
+        <gz-gui>
+          <title>Autonomy Switch</title>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+        <sim_topic>/enable_autonomy</sim_topic>
+        <message_type>gz.msgs.Boolean</message_type>
+      </plugin>
+    </gui>
+  </world>
+</sdf>
