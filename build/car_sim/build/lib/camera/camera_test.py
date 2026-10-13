@@ -395,7 +395,7 @@ class CameraSensorTrackingControl(Node):
         steering_angle = max(-max_steer, min(max_steer, steering_angle))
 
         # 디버그 로그 (f-string 적용)
-        self.get_logger().info(f"[CONTROL] Kp: {kp:.4f} | Kd: {kd:.5f} | Steer: {steering_angle:.3f}")
+        #self.get_logger().info(f"[CONTROL] Kp: {kp:.4f} | Kd: {kd:.5f} | Steer: {steering_angle:.3f}")
 
         return self.target_speed, steering_angle
 

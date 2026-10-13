@@ -43,7 +43,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             [os.path.join(get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py")]
         ),
-        # 빈 월드 대신 city_world.sdf를 열도록 수정
         launch_arguments={'gz_args': f'-r {world_file}'}.items(),
     )
 
@@ -53,7 +52,7 @@ def generate_launch_description():
         executable="create",
         arguments=["-topic", "robot_description", "-name", "with_robot",
                    #'-x','278.0','-y', '-134.0', '-z', '10.0', '-R', '0.00', '-P', '0.0', '-Y', '-0.75'  
-                   '-x','10.0','-y', '20.0', '-z', '0.1'
+                   '-x','10.0','-y', '20.0', '-z', '0.5'
                    ],
         output="screen",
     )
@@ -62,7 +61,8 @@ def generate_launch_description():
     # 7. ROS 2 - Gazebo 양방향/단방향 통신 브리지 설정
     # 7-1. 일반 제어/상태 토픽 브리지
     bridge = Node(
-        package='ros_gz_bridge',
+        package='ros_gz_bridge'
+        ,
         executable='parameter_bridge',
         arguments=[
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
@@ -82,8 +82,8 @@ def generate_launch_description():
 
     lane_tracker_node = Node(
         package=package_name,                          # 패키지 이름 (car_sim)
-        executable="camera_test",    # 실행파일명 (또는 setup.py의 entry_points)
-        name="camera_test",
+        executable="camera_controller_test",    # 실행파일명 (또는 setup.py의 entry_points)
+        name="camera_controller_test",
         output="screen",
         parameters=[
             param_dir,                                 # 불러올 YAML 파일 경로

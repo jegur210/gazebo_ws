@@ -9,17 +9,18 @@ setup.py
 ../../build/car_sim/car_sim.egg-info/top_level.txt
 ../../build/car_sim/car_sim.egg-info/zip-safe
 camera/__init__.py
+camera/camera_controller_test.py
 camera/camera_sensor.py
 camera/camera_sensor_test.py
 camera/camera_test.py
 camera/test.py
 car_sim/__init__.py
+gui/__init__.py
+gui/controller.py
 launch/car.launch.py
-map/city_world.sdf
-map/control_world.sdf
-map/track_world.sdf
 param/bev_param.yaml
 param/camera.yaml
+param/new_params.yaml
 resource/car_sim
 test/test_copyright.py
 test/test_flake8.py
@@ -27,3 +28,4 @@ test/test_pep257.py
 urdf/car.xacro
 urdf/gazebo.xacro
 urdf/inertial.xacro
+urdf/test.xacro

@@ -1,0 +1,25 @@
+[0.592s] Invoking command in '/home/jegur/gazebo_ws/src/car_sim': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/jegur/gazebo_ws/build/car_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/car_sim build --build-base /home/jegur/gazebo_ws/build/car_sim/build install --record /home/jegur/gazebo_ws/build/car_sim/install.log --install-scripts $base/lib/car_sim --single-version-externally-managed install_data
+[0.763s] running egg_info
+[0.774s] writing ../../build/car_sim/car_sim.egg-info/PKG-INFO
+[0.774s] writing dependency_links to ../../build/car_sim/car_sim.egg-info/dependency_links.txt
+[0.774s] writing entry points to ../../build/car_sim/car_sim.egg-info/entry_points.txt
+[0.774s] writing requirements to ../../build/car_sim/car_sim.egg-info/requires.txt
+[0.774s] writing top-level names to ../../build/car_sim/car_sim.egg-info/top_level.txt
+[0.796s] reading manifest file '../../build/car_sim/car_sim.egg-info/SOURCES.txt'
+[0.797s] writing manifest file '../../build/car_sim/car_sim.egg-info/SOURCES.txt'
+[0.797s] running build
+[0.797s] running build_py
+[0.797s] running install
+[0.801s] running install_lib
+[0.813s] running install_data
+[0.813s] copying launch/car.launch.py -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/launch
+[0.813s] copying urdf/test.xacro -> /home/jegur/gazebo_ws/install/car_sim/share/car_sim/urdf
+[0.813s] running install_egg_info
+[0.825s] removing '/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info' (and everything under it)
+[0.825s] Copying ../../build/car_sim/car_sim.egg-info to /home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages/car_sim-0.0.0-py3.12.egg-info
+[0.825s] running install_scripts
+[0.901s] Installing camera_sensor script to /home/jegur/gazebo_ws/install/car_sim/lib/car_sim
+[0.901s] Installing camera_sensor_test script to /home/jegur/gazebo_ws/install/car_sim/lib/car_sim
+[0.901s] Installing camera_test script to /home/jegur/gazebo_ws/install/car_sim/lib/car_sim
+[0.901s] writing list of installed files to '/home/jegur/gazebo_ws/build/car_sim/install.log'
+[0.917s] Invoked command in '/home/jegur/gazebo_ws/src/car_sim' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/jegur/gazebo_ws/build/car_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jegur/gazebo_ws/install/car_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/car_sim build --build-base /home/jegur/gazebo_ws/build/car_sim/build install --record /home/jegur/gazebo_ws/build/car_sim/install.log --install-scripts $base/lib/car_sim --single-version-externally-managed install_data
