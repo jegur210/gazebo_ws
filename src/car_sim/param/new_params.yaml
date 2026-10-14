@@ -3,10 +3,11 @@ camera_test:
     bottom_x: 0.0
     bottom_y: 0.95
     kd: 0.0005
-    kp: 0.003
+    kp: 0.03
     left_search_max: 0.45
     left_search_min: 0.0
     right_search_max: 1.0
     right_search_min: 0.55
+    target_speed: 0.0
     top_x: 0.15
     top_y: 0.45

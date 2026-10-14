@@ -74,7 +74,7 @@ class CameraSensorTrackingControl(Node):
         self.declare_parameter('kp', 0.003)
         self.declare_parameter('kd', 0.0005)
 
-        self.target_speed = 0.5   # m/s (직진 속도)
+        self.declare_parameter('target_speed', 0.5)
         self.prev_error = 0.0
         
         # 픽셀 - 미터 변환 계수 (카메라 해상도/BEV 시야각에 맞춰 조정)
@@ -368,6 +368,8 @@ class CameraSensorTrackingControl(Node):
             self.right_fit = self.alpha * current_right_fit + (1 - self.alpha) * self.right_fit
 
     def calculate_control(self, left_fit, right_fit):
+        self.target_speed = self.get_parameter('target_speed').value
+
         if left_fit is None or right_fit is None:
             # 차선을 놓친 경우 감속 또는 정지 명령
             return 0.0, 0.0
@@ -398,7 +400,7 @@ class CameraSensorTrackingControl(Node):
 
         # 디버그 로그 (f-string 적용)
         #self.get_logger().info(f"[CONTROL] Kp: {kp:.4f} | Kd: {kd:.5f} | Steer: {steering_angle:.3f}")
-
+        self.get_logger().info(f"[CONTROL] Speed: {self.target_speed:.4f}")
         return self.target_speed, steering_angle
 
     def publish_cmd_vel(self, linear_v, angular_z):
@@ -406,6 +408,7 @@ class CameraSensorTrackingControl(Node):
         cmd.linear.x = float(linear_v)
         cmd.angular.z = float(angular_z)
         self.cmd_vel_pub.publish(cmd)
+
 
     def image_callback(self, msg):
         frame = self.br.imgmsg_to_cv2(msg, "bgr8")

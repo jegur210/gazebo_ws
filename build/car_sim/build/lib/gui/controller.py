@@ -56,11 +56,11 @@ class CarControlApp(tk.Tk):
         self.speed_frame = tk.LabelFrame(self, text=" 주행 속도 제어 ", font=("Arial", 10, "bold"))
         self.speed_frame.pack(pady=5, padx=15, fill="x")
 
-        self.speed_label = tk.Label(self.speed_frame, text="Linear X: 0.0 m/s")
-        self.speed_label.pack()
-        self.speed_slider = tk.Scale(self.speed_frame, from_=-2.0, to=2.0, resolution=0.1, orient="horizontal", command=self.on_speed_change)
-        self.speed_slider.set(0.0)
-        self.speed_slider.pack(fill="x", padx=10, pady=2)
+        #self.speed_label = tk.Label(self.speed_frame, text="Linear X: 0.0 m/s")
+        #self.speed_label.pack()
+        #self.speed_slider = tk.Scale(self.speed_frame, from_=-2.0, to=2.0, resolution=0.1, orient="horizontal", command=self.on_speed_change)
+        #self.speed_slider.set(0.0)
+        #self.speed_slider.pack(fill="x", padx=10, pady=2)
 
         self.turn_label = tk.Label(self.speed_frame, text="Angular Z: 0.0 rad/s")
         self.turn_label.pack()
@@ -73,6 +73,11 @@ class CarControlApp(tk.Tk):
         self.param_frame.pack(pady=10, padx=15, fill="x")
 
         self.sliders = {}
+
+        self.speed_label = tk.Label(self.param_frame, text="Linear X: 0.0 m/s")
+        self.speed_label.pack()
+        self.create_param_slider("target_speed", 0.0, 2.0, 0.1, 0.0)
+
 
         # ROI 설정
         self.create_param_slider("top_x", 0.0, 1.0, 0.01, 0.15)

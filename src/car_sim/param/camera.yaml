@@ -1,4 +1,4 @@
-/cmaera_test:
+/camera_controller_test:
   ros__parameters:
     bottom_x: 0.0
     bottom_y: 0.95
@@ -9,4 +9,7 @@
     start_type_description_service: true
     top_x: 0.15
     top_y: 0.45
+    kp : 0.3
+    kd: 0.0005
+    target_speed: 0.5
     use_sim_time: true
